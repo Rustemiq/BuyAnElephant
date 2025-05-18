@@ -61,7 +61,6 @@ def handle_dialog(req, res):
         else:
             res['response']['text'] = 'Кролика можно найти на Яндекс.Маркете!'
             res['response']['end_session'] = True
-        res['response']['end_session'] = True
         return
     if sessionStorage[user_id]['animal'] == 'слон':
         res['response']['text'] = \
