@@ -1,7 +1,3 @@
-# импортируем библиотеки
-from flask import Flask, request, jsonify
-import logging
-
 app = Flask(__name__)
 
 logging.basicConfig(level=logging.INFO)
@@ -40,7 +36,8 @@ def handle_dialog(req, res):
                 "Не хочу.",
                 "Не буду.",
                 "Отстань!",
-            ]
+            ],
+            'animal': 'слон'
         }
         res['response']['text'] = 'Привет! Купи слона!'
         res['response']['buttons'] = get_suggests(user_id)
@@ -54,12 +51,20 @@ def handle_dialog(req, res):
         'я покупаю',
         'я куплю'
     ]:
-        res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
+        if sessionStorage[user_id]['animal'] == 'слон':
+            res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
+            sessionStorage[user_id]['animal'] = 'кролик'
+        else:
+            res['response']['text'] = 'Кролика можно найти на Яндекс.Маркете!'
+            res['response']['end_session'] = True
         res['response']['end_session'] = True
         return
-
-    res['response']['text'] = \
-        f"Все говорят '{req['request']['original_utterance']}', а ты купи слона!"
+    if sessionStorage[user_id]['animal'] == 'слон':
+        res['response']['text'] = \
+            f"Все говорят '{req['request']['original_utterance']}', а ты купи слона!"
+    else:
+        res['response']['text'] = \
+            f"Все говорят '{req['request']['original_utterance']}', а ты купи кролика!"
     res['response']['buttons'] = get_suggests(user_id)
 
 
